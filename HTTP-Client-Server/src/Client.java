@@ -22,7 +22,7 @@ import java.net.Socket;
  */
 public class Client {
 	private static String uri;
-	private static String port;
+	private static int port;
 	private static String command;
 
 	
@@ -30,7 +30,8 @@ public class Client {
 		
 		command = args[0];
 		uri = args[1];
-		port = args[2];
+		port =  Integer.parseInt(args[2]);
+		
 		System.out.println(command);
 		System.out.println(uri);
 		System.out.println(port);
@@ -49,7 +50,7 @@ public class Client {
 		if (command.equals("GET")){
 			System.out.println("command is get");
 			InetAddress addr = InetAddress.getByName(uri);
-		    Socket socket = new Socket(addr, 80);
+		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
 		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
 		    BufferedReader in = new BufferedReader(
@@ -80,7 +81,7 @@ public class Client {
 		
 		else if (command == "HEAD"){
 			InetAddress addr = InetAddress.getByName(uri);
-		    Socket socket = new Socket(addr, 80);
+		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
 		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
 		    BufferedReader in = new BufferedReader(
