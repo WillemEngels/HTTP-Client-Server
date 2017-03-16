@@ -1,9 +1,6 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+
 
 /**
  * 
@@ -53,9 +50,10 @@ public class Client {
 		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
 		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
-		    BufferedReader in = new BufferedReader(
-
-		    new InputStreamReader(socket.getInputStream()));
+		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		    
+		    
+		    
 		    // send an HTTP request to the web server
 		    out.println("GET / HTTP/1.1");
 		    out.println("Host: "+uri+":"+port);
@@ -64,7 +62,7 @@ public class Client {
 
 		    // read the response
 		    boolean loop = true;
-		    StringBuilder sb = new StringBuilder(8096);
+		    StringBuilder sb = new StringBuilder();
 		    while (loop) {
 		      if (in.ready()) {
 		        int i = 0;
@@ -76,7 +74,16 @@ public class Client {
 		      }
 		    }
 		    System.out.println(sb.toString());
-		    socket.close();
+		    
+		    //create HTML file & PrintStream to write on file
+		    File file = new File("/home/r0579613/Desktop/HTML.html");
+		    PrintStream ps = new PrintStream(file);
+		    
+		    //write on HTML file
+		    ps.print(sb.toString());
+		    
+		    
+		    
 		}
 		
 		else if (command.equals("HEAD")){
@@ -84,9 +91,8 @@ public class Client {
 		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
 		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
-		    BufferedReader in = new BufferedReader(
-
-		    new InputStreamReader(socket.getInputStream()));
+		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		    
 		    // send an HTTP request to the web server
 		    out.println("HEAD / HTTP/1.1");
 		    out.println("Host: "+uri+":"+port);
@@ -95,7 +101,7 @@ public class Client {
 		    
 		    // read the response
 		    boolean loop = true;
-		    StringBuilder sb = new StringBuilder(8096);
+		    StringBuilder sb = new StringBuilder();
 		    while (loop) {
 		      if (in.ready()) {
 		        int i = 0;
@@ -118,6 +124,7 @@ public class Client {
 			
 		}
 		
-		
 	}
+	
+	
 }
