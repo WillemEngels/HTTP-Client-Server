@@ -52,7 +52,9 @@ public class Client {
 		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
-		    
+		  //create HTML file & PrintStream to write on file
+		    File file = new File("/home/r0579613/Desktop/HTML.html");
+		    PrintStream ps = new PrintStream(file);
 		    
 		    // send an HTTP request to the web server
 		    out.println("GET / HTTP/1.1");
@@ -74,10 +76,6 @@ public class Client {
 		      }
 		    }
 		    System.out.println(sb.toString());
-		    
-		    //create HTML file & PrintStream to write on file
-		    File file = new File("/home/r0579613/Desktop/HTML.html");
-		    PrintStream ps = new PrintStream(file);
 		    
 		    //write on HTML file
 		    ps.print(sb.toString());
