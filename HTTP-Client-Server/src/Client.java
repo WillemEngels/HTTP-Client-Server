@@ -79,7 +79,7 @@ public class Client {
 		    socket.close();
 		}
 		
-		else if (command == "HEAD"){
+		else if (command.equals("HEAD")){
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
@@ -92,6 +92,22 @@ public class Client {
 		    out.println("Host: "+uri+":"+port);
 		    out.println("Connection: Close");
 		    out.println();
+		    
+		    // read the response
+		    boolean loop = true;
+		    StringBuilder sb = new StringBuilder(8096);
+		    while (loop) {
+		      if (in.ready()) {
+		        int i = 0;
+		        while (i != -1) {
+		          i = in.read();
+		          sb.append((char) i);
+		        }
+		        loop = false;
+		      }
+		    }
+		    System.out.println(sb.toString());
+		    socket.close();
 		}
 		
 		else if (command == "PUT"){
