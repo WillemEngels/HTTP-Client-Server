@@ -121,8 +121,13 @@ public class Client {
 		else if (command == "POST"){
 			
 		}
-		
 	}
 	
+	public static void readHTML(File file){
+		
+		
+		
+	}
+
 	
 }
