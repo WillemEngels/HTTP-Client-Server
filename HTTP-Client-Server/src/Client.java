@@ -58,7 +58,7 @@ public class Client {
 		    
 		    // send an HTTP request to the web server
 		    out.println("GET / HTTP/1.1");
-		    out.println("Host: "+uri+":"+port);
+		    out.println("host: "+uri);
 		    out.println("Connection: Close");
 		    out.println();
 
@@ -87,37 +87,37 @@ public class Client {
 		    //achter source "" opslaan
 		    
 		    //words to search for
-		    String image = "img ";
-		    String source = "src=";
-		    //array om strings op te slaan
-		    List<String> list = new ArrayList();//array om strings op te slaan
-		    
-		    //loopen met while
-		    boolean bool = true;
-		    int index = 0;
-		    while(bool = true){
-		    	if(HTML.indexOf(image,index)==-1){
-		    		bool = false;
-		    		break;
-		    	}
-		    	
-		    	 char a_char = HTML.charAt(index+5);
-		    	 String str = Character.toString(a_char);
-		    	 char a_char2 = HTML.charAt(index+6);
-		    	 String str2 = Character.toString(a_char2);
-		    	//zoeken naar eerste aanhalingsteken bij index = index+5
-		    	if ((str=="/")&&(str2=="/")){
-		    		int endIndex = HTML.indexOf('"', index+7);
-		    		String imageAdress = HTML.substring(index+7,endIndex-1);
-		    		list.add(imageAdress);
-		    	}
-		    	else{
-		    		int endIndex = HTML.indexOf('"', index+5);
-		    		String imageAdress = HTML.substring(index+5,endIndex-1);
-		    		list.add(imageAdress);
-		    	//TODO afbeeldigen opslaan
-		    	}
-		    }
+//		    String image = "img ";
+//		    String source = "src=";
+//		    //array om strings op te slaan
+//		    List<String> list = new ArrayList();//array om strings op te slaan
+//		    
+//		    //loopen met while
+//		    boolean bool = true;
+//		    int index = 0;
+//		    while(bool = true){
+//		    	if(HTML.indexOf(image,index)==-1){
+//		    		bool = false;
+//		    		break;
+//		    	}
+//		    	
+//		    	 char a_char = HTML.charAt(index+5);
+//		    	 String str = Character.toString(a_char);
+//		    	 char a_char2 = HTML.charAt(index+6);
+//		    	 String str2 = Character.toString(a_char2);
+//		    	//zoeken naar eerste aanhalingsteken bij index = index+5
+//		    	if ((str=="/")&&(str2=="/")){
+//		    		int endIndex = HTML.indexOf('"', index+7);
+//		    		String imageAdress = HTML.substring(index+7,endIndex-1);
+//		    		list.add(imageAdress);
+//		    	}
+//		    	else{
+//		    		int endIndex = HTML.indexOf('"', index+5);
+//		    		String imageAdress = HTML.substring(index+5,endIndex-1);
+//		    		list.add(imageAdress);
+//		    	//TODO afbeeldigen opslaan
+//		    	}
+//		    }
 		    
 		    
 		    
@@ -135,7 +135,7 @@ public class Client {
 		    
 		    // send an HTTP request to the web server
 		    out.println("HEAD / HTTP/1.1");
-		    out.println("Host: "+uri+":"+port);
+		    out.println("host: "+uri);
 		    out.println("Connection: Close");
 		    out.println();
 		    
