@@ -115,6 +115,7 @@ public class Client {
 		    		int endIndex = HTML.indexOf('"', index+5);
 		    		String imageAdress = HTML.substring(index+5,endIndex-1);
 		    		list.add(imageAdress);
+		    	//TODO afbeeldigen opslaan
 		    	}
 		    }
 		    
