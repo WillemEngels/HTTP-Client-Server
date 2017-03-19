@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.*;
-import javax.imageio.*;
 
 /**
  * 
@@ -24,7 +22,7 @@ public class Client {
 	private static String command;
 
 	
-	public static void main(String args[]) throws Exception{
+	public static void main(String[] args) throws Exception{
 		
 		command = args[0];
 		uri = args[1];
