@@ -78,53 +78,56 @@ public class Client {
 		    }
 		    System.out.println(sb.toString());
 		    
+		    String s = "<";
+		    while(sb.toString().charAt(0)!=s.charAt(0)){
+		    	sb.deleteCharAt(0);
+		    }
+		    
 		    //write on HTML file
 		    String HTML = sb.toString();
 		    ps.print(HTML);
 		    
 		    //search for embedded images
-		    //eerst zoeken naar img
-		    //dan naar src
-		    //achter source "" opslaan
-		    
-		    //words to search for
-		    String image = "img ";
-		    String source = "src=";
-		    //array om strings op te slaan
-		    List<String> list = new ArrayList();//array om strings op te slaan
-		    
-		    //loopen met while
-		    boolean bool = true;
-		    int index = 0;
-		    while(bool = true){
-		    	if(HTML.indexOf(image,index)==-1){
-		    		bool = false;
-		    		break;
-		    	}
-		    	
-		    	 char a_char = HTML.charAt(index+5);
-		    	 String str = Character.toString(a_char);
-		    	 char a_char2 = HTML.charAt(index+6);
-		    	 String str2 = Character.toString(a_char2);
-		    	//zoeken naar eerste aanhalingsteken bij index = index+5
-		    	if ((str=="/")&&(str2=="/")){
-		    		int endIndex = HTML.indexOf('"', index+7);
-		    		String imageAdress = HTML.substring(index+7,endIndex-1);
-		    		list.add(imageAdress);
-		    	}
-		    	else{
-		    		int endIndex = HTML.indexOf('"', index+5);
-		    		String imageAdress = HTML.substring(index+5,endIndex-1);
-		    		list.add(imageAdress);
-		    	//TODO afbeeldigen opslaan
-		    	}
-		    }
+		    //search image with java.imageio
 		    
 		    
 		    
 		    
 		    
+//		    //words to search for
+//		    String image = "img ";
+//		    String source = "src=";
+//		    //array om strings op te slaan
+//		    List<String> list = new ArrayList();//array om strings op te slaan
+//		    
+//		    //loopen met while
+//		    boolean bool = true;
+//		    int index = 0;
+//		    while(bool = true){
+//		    	if(HTML.indexOf(image,index)==-1){
+//		    		bool = false;
+//		    		break;
+//		    	}
+//		    	
+//		    	 char a_char = HTML.charAt(index+5);
+//		    	 String str = Character.toString(a_char);
+//		    	 char a_char2 = HTML.charAt(index+6);
+//		    	 String str2 = Character.toString(a_char2);
+//		    	//zoeken naar eerste aanhalingsteken bij index = index+5
+//		    	if ((str=="/")&&(str2=="/")){
+//		    		int endIndex = HTML.indexOf('"', index+7);
+//		    		String imageAdress = HTML.substring(index+7,endIndex-1);
+//		    		list.add(imageAdress);
+//		    	}
+//		    	else{
+//		    		int endIndex = HTML.indexOf('"', index+5);
+//		    		String imageAdress = HTML.substring(index+5,endIndex-1);
+//		    		list.add(imageAdress);
+//		    	//TODO afbeeldigen opslaan
+//		    	}
+//		    }
 		    
+		    socket.close();
 		}
 		
 		else if (command.equals("HEAD")){
