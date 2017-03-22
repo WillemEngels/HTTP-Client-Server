@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 /**
  * 
@@ -52,7 +53,7 @@ public class Client {
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
 		  //create HTML file & PrintStream to write on file
-		    File file = new File("/home/r0579613/Desktop/HTML.html");
+		    File file = new File("C:/Users/phili_000/Desktop/HTML.html");
 		    PrintStream ps = new PrintStream(file);
 		    
 		    // send an HTTP request to the web server
@@ -88,42 +89,26 @@ public class Client {
 		    //search for embedded images
 		    //search image with java.imageio
 		    
+		    String image = "img src=\"";
+		    //array om links op te slaan
+		    List<String> list = new ArrayList<String>();
 		    
-		    
-		    
-		    
-//		    //words to search for
-//		    String image = "img ";
-//		    String source = "src=";
-//		    //array om strings op te slaan
-//		    List<String> list = new ArrayList();//array om strings op te slaan
-//		    
-//		    //loopen met while
-//		    boolean bool = true;
-//		    int index = 0;
-//		    while(bool = true){
-//		    	if(HTML.indexOf(image,index)==-1){
-//		    		bool = false;
-//		    		break;
-//		    	}
-//		    	
-//		    	 char a_char = HTML.charAt(index+5);
-//		    	 String str = Character.toString(a_char);
-//		    	 char a_char2 = HTML.charAt(index+6);
-//		    	 String str2 = Character.toString(a_char2);
-//		    	//zoeken naar eerste aanhalingsteken bij index = index+5
-//		    	if ((str=="/")&&(str2=="/")){
-//		    		int endIndex = HTML.indexOf('"', index+7);
-//		    		String imageAdress = HTML.substring(index+7,endIndex-1);
-//		    		list.add(imageAdress);
-//		    	}
-//		    	else{
-//		    		int endIndex = HTML.indexOf('"', index+5);
-//		    		String imageAdress = HTML.substring(index+5,endIndex-1);
-//		    		list.add(imageAdress);
-//		    	//TODO afbeeldigen opslaan
-//		    	}
-//		    }
+		    boolean bool = true;
+		    int index = 0;
+		    while (bool=true){
+		    	if(HTML.indexOf(image,index)==-1){
+		    		bool = false;
+		    	}
+		    	else{
+		    		index = HTML.indexOf(image,index);
+		    		int endIndex = HTML.indexOf("\"", index+9);
+		    		String imageAdress = HTML.substring(index+9,endIndex-1);
+		    		list.add(imageAdress);
+		    	}
+		    }
+		   System.out.println("/////////////////////////////");
+		    System.out.println(list.get(0)+"   "+ list.get(1));
+		   
 		    
 		    socket.close();
 		}
