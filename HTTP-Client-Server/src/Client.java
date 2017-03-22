@@ -1,6 +1,10 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * 
@@ -86,29 +90,19 @@ public class Client {
 		    String HTML = sb.toString();
 		    ps.print(HTML);
 		    
-		    //search for embedded images
-		    //search image with java.imageio
 		    
-		    String image = "img src=\"";
-		    //array om links op te slaan
-		    List<String> list = new ArrayList<String>();
+		    //parse using jsoup
 		    
-		    boolean bool = true;
-		    int index = 0;
-		    while (bool=true){
-		    	if(HTML.indexOf(image,index)==-1){
-		    		bool = false;
-		    	}
-		    	else{
-		    		index = HTML.indexOf(image,index);
-		    		int endIndex = HTML.indexOf("\"", index+9);
-		    		String imageAdress = HTML.substring(index+9,endIndex-1);
-		    		list.add(imageAdress);
-		    	}
+		    Document doc = Jsoup.parse(HTML);
+		    Elements img = doc.getElementsByTag("img");
+		  
+		    
+		    for (Element element : img){
+		    	
+		    	String source = element.absUrl("src");
+		    	getIMG(source);
 		    }
-		   System.out.println("/////////////////////////////");
-		    System.out.println(list.get(0)+"   "+ list.get(1));
-		   
+		    	
 		    
 		    socket.close();
 		}
@@ -152,10 +146,23 @@ public class Client {
 		}
 	}
 	
-	public static void readHTML(File file){
+	private static void getIMG(String str) throws IOException{
+		int index = str.lastIndexOf("/");
+		if (index == str.length()){
+			str = str.substring(1, index);
+		}
 		
+		String name = str.substring(index,str.length());
+		URL url = new URL(str);
+		InputStream in = url.openStream();
+		OutputStream out = new BufferedOutputStream(new FileOutputStream("<FOLDER PATH>"+ name));
 		
-		
+		for (int i; (i=in.read()) != -1;){
+			out.write(i);
+		}
+		out.close();
+		in.close();
+	
 	}
 
 	
