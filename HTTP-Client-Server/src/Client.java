@@ -93,7 +93,8 @@ public class Client {
 		    
 		    
 		    //parse using jsoup
-		    parse(HTML);	
+		    parse(HTML);
+		    
 		}
 		
 		else if (command.equals("HEAD")){
@@ -127,11 +128,78 @@ public class Client {
 		}
 		
 		else if (command == "PUT"){
+			InetAddress addr = InetAddress.getByName(uri);
+		    Socket socket = new Socket(addr, port);
+		    boolean autoflush = true;
+		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		    
+			
+			
+			
+			System.out.println("Enter message: ");
+			Scanner scanner = new Scanner(System.in);
+			StringBuffer sb = new StringBuffer();
+			String message = scanner.nextLine();
+			while (scanner.hasNext()){
+				sb = sb.append(scanner.nextLine());
+			}
+			message = sb.toString();
+			
+			out.println("PUT " + uri + " HTTP/1.1\r\n");
+			
+			out.println("Content-Length: " + message.length() + "\r\n");
+			out.println("Content-Type: application/x-www-form-urlencoded\r\n");
+			out.println("\r\n");
+
+			out.println(message);
+			out.flush();
+
+		    String line;
+		    while ((line = in.readLine()) != null) {
+		      System.out.println(line);
+		    }
+		    out.close();
+		    in.close();
+			
+			
 			
 		}
 		
 		else if (command == "POST"){
+			InetAddress addr = InetAddress.getByName(uri);
+		    Socket socket = new Socket(addr, port);
+		    boolean autoflush = true;
+		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		    
 			
+			
+			
+			System.out.println("Enter message: ");
+			Scanner scanner = new Scanner(System.in);
+			StringBuffer sb = new StringBuffer();
+			String message = scanner.nextLine();
+			while (scanner.hasNext()){
+				sb = sb.append(scanner.nextLine());
+			}
+			message = sb.toString();
+			
+			out.println("POST " + uri + " HTTP/1.1\r\n");
+			
+			out.println("Content-Length: " + message.length() + "\r\n");
+			out.println("Content-Type: application/x-www-form-urlencoded\r\n");
+			out.println("\r\n");
+
+			out.println(message);
+			out.flush();
+
+		    String line;
+		    while ((line = in.readLine()) != null) {
+		      System.out.println(line);
+		    }
+		    out.close();
+		    in.close();
 		}
 	}
 	
