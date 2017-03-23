@@ -178,32 +178,58 @@ public class Client {
 	    
 	    DataInputStream in = new DataInputStream(socket.getInputStream());
 	    
-	    OutputStream dos = new FileOutputStream(file);
+	    OutputStream os = new FileOutputStream(file);
+	    //delete content length header
+	    
+	    int count, offset;
 	    byte[] buffer = new byte[2048];
 	    boolean eohFound = false;
-	    while ((in.read(buffer)) != -1){
-	    	
-	    	//delete http content length header.
-	    	
-	    	
-//	        if(!eohFound){
-//	            String string = new String(buffer, 0, count);
-//	            int indexOfEOH = string.indexOf("\r\n\r\n");
-//	            if(indexOfEOH != -1) {
-//	                count = count-indexOfEOH-4;
-//	                buffer = string.substring(indexOfEOH+4).getBytes();
-//	                eohFound = true;
-//	            } else {
-//	                count = 0;
-//	            }
-//	        }
-	    	
-	      dos.write(buffer);
-	      dos.flush();
+	    while ((count = in.read(buffer)) != -1)
+	    {
+	        offset = 0;
+	        if(!eohFound){
+	            String string = new String(buffer, 0, count);
+	            int indexOfEOH = string.indexOf("\r\n\r\n");
+	            if(indexOfEOH != -1) {
+	                count = count-indexOfEOH-4;
+	                offset = indexOfEOH+4;
+	                eohFound = true;
+	            } else {
+	                count = 0;
+	            }
+	        }
+	      os.write(buffer, offset, count);
+	      
+	      os.flush();
 	    }
-	    
 	    in.close();
-	    dos.close();
+	    os.close();
+
+	    
+	    
+//	    byte[] buffer = new byte[2048];
+//	    boolean eohFound = false;
+//	    while ((in.read(buffer)) != -1){
+//	    	
+//	    	//delete http content length header.
+//	    	
+//	    	
+////	        if(!eohFound){
+////	            String string = new String(buffer, 0, count);
+////	            int indexOfEOH = string.indexOf("\r\n\r\n");
+////	            if(indexOfEOH != -1) {
+////	                count = count-indexOfEOH-4;
+////	                buffer = string.substring(indexOfEOH+4).getBytes();
+////	                eohFound = true;
+////	            } else {
+////	                count = 0;
+////	            }
+////	        }
+//	    	
+//	      dos.write(buffer);
+//	      dos.flush();
+//	    }
+	    
 	    socket.close();
 	}
 	
