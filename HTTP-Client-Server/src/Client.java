@@ -84,7 +84,7 @@ public class Client {
 		      }
 		    }
 		    //TODO uncomment
-		    //System.out.println(sb.toString());
+		    System.out.println(sb.toString());
 		    
 		    String s = "<";
 		    while(sb.toString().charAt(0)!=s.charAt(0)){
@@ -203,33 +203,7 @@ public class Client {
 	      os.flush();
 	    }
 	    in.close();
-	    os.close();
-
-	    
-	    
-//	    byte[] buffer = new byte[2048];
-//	    boolean eohFound = false;
-//	    while ((in.read(buffer)) != -1){
-//	    	
-//	    	//delete http content length header.
-//	    	
-//	    	
-////	        if(!eohFound){
-////	            String string = new String(buffer, 0, count);
-////	            int indexOfEOH = string.indexOf("\r\n\r\n");
-////	            if(indexOfEOH != -1) {
-////	                count = count-indexOfEOH-4;
-////	                buffer = string.substring(indexOfEOH+4).getBytes();
-////	                eohFound = true;
-////	            } else {
-////	                count = 0;
-////	            }
-////	        }
-//	    	
-//	      dos.write(buffer);
-//	      dos.flush();
-//	    }
-	    
+	    os.close();   
 	    socket.close();
 	}
 	
