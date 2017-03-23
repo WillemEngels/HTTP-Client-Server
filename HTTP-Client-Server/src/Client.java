@@ -39,9 +39,9 @@ public class Client {
 		uri = args[1];
 		port =  Integer.parseInt(args[2]);
 		
-		System.out.println(command);
-		System.out.println(uri);
-		System.out.println(port);
+//		System.out.println(command);
+//		System.out.println(uri);
+//		System.out.println(port);
 		//getinput
 		
 		makeRequest(uri);
@@ -84,8 +84,9 @@ public class Client {
 		      }
 		    }
 		   
+		    System.out.println(">>>>>>>>>");
 		    System.out.println(sb.toString());
-		    
+		    System.out.println("<<<<<<<<<");
 		    
 		    String s = "<";
 		    while(sb.toString().charAt(0)!=s.charAt(0)){
