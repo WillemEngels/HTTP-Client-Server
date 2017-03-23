@@ -26,19 +26,23 @@ public class Handler implements Runnable{
 	public void run() {
 
 		try  {
+			
 			inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			outToClient =  new DataOutputStream(clientSocket.getOutputStream());
 
 
 
-
+			//the command line that the clientsocket sends to the server is read and stores the data in different variables 
 			String cmd = inFromClient.readLine();
 			String[] Command = cmd.split(" ");
 			String command = Command[0];
 			String fileName = Command[1];
 			String httpVersion = Command[2];
 			String newLine = ".";
-			while (!(newLine = inFromClient.readLine()).equals("")) {
+//			while (!(newLine = inFromClient.readLine()).equals("")) {
+			while (inFromClient.ready()){
+				
+			
 				newLine = inFromClient.readLine();
 				if (newLine.startsWith("Host: ")){
 					this.host = newLine.substring(6);
@@ -52,13 +56,14 @@ public class Handler implements Runnable{
 				if (newLine.startsWith("Content-Type: ")){
 					this.contentType = newLine;
 				}
-						
+					
+				
 				
 			}
 
 			if ( command.equals("GET"))
 			{
-
+				//if the host header was empty no connection can be made
 				if (this.host.isEmpty()){
 					String statusLine = "404 Not Found" + "\r\n";
 					String date = "Date: " + new Date().toString() + "\r\n";
@@ -68,17 +73,14 @@ public class Handler implements Runnable{
 				}
 				else {
 
+					//favicon.ico isn't an embedded image so it isn't handled
 					if (fileName.equals("/favicon.ico")){
 
 					}
 					else{
 
-
-						System.out.println("hostname " + clientSocket.getLocalAddress().getHostName());
+						//the html file that is asked for is stored in file
 						File file = new File("src/ServerHTML.html");
-						System.out.println(file.exists());
-
-
 						URL url = null;
 						
 						InputStream is = null;
@@ -88,6 +90,8 @@ public class Handler implements Runnable{
 
 
 						try {
+							
+							//make sure the url is correct
 							if (fileName.startsWith("/")){
 								fileName = "http:/" + fileName;
 
@@ -101,7 +105,7 @@ public class Handler implements Runnable{
 								}
 							}
 							
-							
+							//a URL of the given file name is made, a connection is made with it and the output it sends is sored in the html file using FileWriter
 							url = new URL(fileName);
 							is = url.openStream();
 							br = new BufferedReader(new InputStreamReader(is));
@@ -111,7 +115,10 @@ public class Handler implements Runnable{
 
 
 							}
-
+							
+							// if the If-Modified-since header is given, it is checked if the file is modified since the given date
+							// if not so a 304 satus is returned
+							// the DataOutputStream outToClient send the status, date, contentType, contentLength and the file itself to the client
 							if (!this.modifiedDate.equals("")) {
 								if (HasNotBeenModifiedSince(modifiedDate, file.lastModified())){
 
@@ -132,8 +139,6 @@ public class Handler implements Runnable{
 									outToClient.writeBytes(contentLengthLine);
 									outToClient.writeBytes("\r\n");
 
-
-
 									url = new URL(fileName);
 									is = url.openStream();
 									br = new BufferedReader(new InputStreamReader(is));
@@ -145,6 +150,7 @@ public class Handler implements Runnable{
 								}
 							}
 							else{
+								//the same data is send to the client, but the statis is now 200
 								//sendResponse(200, file.toString());
 								String statusLine = "200 OK" + "\r\n";
 								String date = "Date: " + new Date().toString() + "\r\n";
@@ -177,8 +183,7 @@ public class Handler implements Runnable{
 							}
 						} catch (Exception e){
 							e.printStackTrace();
-							//System.out.println("Error 404");
-							//hier 404 teruggeven
+							//Something does not exist, the status 404 is sent
 							String statusLine = "404 Not Found" + "\r\n";
 							String date = "Date: " + new Date().toString() + "\r\n";
 							String responseString = file.toString();
@@ -207,11 +212,7 @@ public class Handler implements Runnable{
 
 			}
 
-
-
-
-
-
+			//the HEAD request works almost the same as the GET request, only the file is never sent to the client, even if it exists.
 			else if (command.equals("HEAD")){
 				if (this.host.isEmpty()){
 					//404
@@ -355,8 +356,6 @@ public class Handler implements Runnable{
 
 					}
 					
-					
-
 				}
 
 			}
@@ -383,7 +382,7 @@ public class Handler implements Runnable{
                     fos.write(buffer, 0, bytesRead);
                     while (bytesRead == 20000);
 
-                  //sendResponse(200, file.toString());
+                    //sendResponse(200, file.toString());
 					String statusLine = "200 OK" + "\r\n";
 					String date = "Date: " + new Date().toString() + "\r\n";
 					outToClient.writeBytes(statusLine);
@@ -467,7 +466,7 @@ public class Handler implements Runnable{
 
 				} catch (Exception e){
 					e.printStackTrace();
-					//hier 404 teruggeven
+					
 					String statusLine = "404 Not Found" + "\r\n";
 					String date = "Date: " + new Date().toString() + "\r\n";
 					outToClient.writeBytes(statusLine);
@@ -481,7 +480,7 @@ public class Handler implements Runnable{
 
 		} catch (Exception e){
 			e.printStackTrace();
-			//hier 500 ??
+			////Something went wrong with the server, status 500 is returned
 			try {
 				String statusLine = "500 Server Error" + "\r\n";
 				String date = "Date: " + new Date().toString() + "\r\n";

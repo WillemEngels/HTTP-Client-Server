@@ -65,7 +65,8 @@ public class Client {
 		    out.println();
 		    
 
-		    // read the response
+		    // The output of the "terminal" is saved in buffered reader
+		    //stringbuilder iterates over the bufferedreader in to make a string
 		    boolean loop = true;
 		    StringBuilder sb = new StringBuilder();
 		    while (loop){
@@ -79,9 +80,10 @@ public class Client {
 		    	}
 		    }
 		   
-
+		    
 		    System.out.println(sb.toString());
 		    socket.close();
+		    //The header is cut off to create a clean html file
 		    String s = "<";
 		    while(sb.toString().charAt(0)!=s.charAt(0)){
 		    	sb.deleteCharAt(0);
@@ -138,7 +140,8 @@ public class Client {
 		    
 			
 			
-			
+			//Ask for new input in the terminal
+		    // this is saved in the string message
 			System.out.println("Enter message: ");
 			Scanner scanner = new Scanner(System.in);
 			StringBuffer sb = new StringBuffer();
@@ -148,6 +151,8 @@ public class Client {
 			}
 			message = sb.toString();
 			
+			// send an http request to the server
+			// also the headers content-Type and content length and the message are sent
 			out.println("PUT " + uri + " HTTP/1.1\r\n");
 			
 			out.println("Content-Length: " + message.length() + "\r\n");
@@ -157,18 +162,23 @@ public class Client {
 			out.println(message);
 			out.flush();
 
+			//the response from the server is printed to the terminal
 		    String line;
 		    while ((line = in.readLine()) != null) {
 		      System.out.println(line);
 		    }
 		    out.close();
 		    in.close();
+		    socket.close();
+		    scanner.close();
 			
 			
 			
 		}
 		
 		else if (command == "POST"){
+			//works almost the same as a PUT request
+			
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
@@ -202,22 +212,28 @@ public class Client {
 		    }
 		    out.close();
 		    in.close();
+		    socket.close();
+		    scanner.close();
 		}
 	}
 	
 	private static void parse(String HTML) throws IOException {
-		
+			
+			//using external library jsoup to parse the HTML file
+			
 			Document doc = Jsoup.parse(HTML);
 			Elements img = doc.select("img");
 			
+			//loops over all images in the file
 			for (Element element : img){
 				
+				//for every image the source is selected
 				String source = element.attr("src");
 				
+				//when the source starts with http, the embedded image is ignored 
 				String s ="http";
 				if (!source.contains(s)){
-					System.out.println("Image Found");
-					System.out.println("src attribute is : "+source);
+					System.out.println("src  : "+source);
 					getIMG(source);
 				}
 			}	    
@@ -225,9 +241,11 @@ public class Client {
 	
 	private static void getIMG(String source) throws IOException{
 		
+		//The original connection is lost so a new connection is created
 		InetAddress addr = InetAddress.getByName(uri);
 	    Socket socket = new Socket(addr, port);
 	    
+	    //create new file to store the image
 		File file = new File("C:/Users/phili_000/Desktop/CN/"+source);
 	    file.getParentFile().mkdirs();
 		
