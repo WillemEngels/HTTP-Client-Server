@@ -83,8 +83,11 @@ public class Client {
 		        loop = false;
 		      }
 		    }
+		    
 		    //TODO uncomment
-		    System.out.println(sb.toString());
+		    String k = sb.toString();
+		    System.out.println(k);
+		    
 		    
 		    String s = "<";
 		    while(sb.toString().charAt(0)!=s.charAt(0)){
@@ -94,13 +97,11 @@ public class Client {
 		    //write on HTML file
 		    String HTML = sb.toString();
 		    ps.print(HTML);
-		    socket.close();
+		    
 		    
 		    //parse using jsoup
 		    parse(HTML);
-		    
-		    
-		    
+		    socket.close();
 		    
 		}
 		
@@ -147,8 +148,6 @@ public class Client {
 		
 			Document doc = Jsoup.parse(HTML);
 			Elements img = doc.select("img");
-	  
-			String str = "http:/www.";
 			
 			for (Element element : img){
 				
