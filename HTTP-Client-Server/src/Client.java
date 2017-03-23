@@ -1,6 +1,12 @@
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -38,18 +44,14 @@ public class Client {
 		System.out.println(port);
 		//getinput
 		
-		makeRequest();
+		makeRequest(uri);
 		
 		
 	  }
 
-	private static void makeRequest() throws IOException {
-		System.out.println("code reaches here");
-		System.out.println(command);
-		System.out.println(command.equals("GET"));
-		// TODO Auto-generated method stub
+	private static void makeRequest(String uri) throws IOException {
+		
 		if (command.equals("GET")){
-			System.out.println("command is get");
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
 		    boolean autoflush = true;
@@ -57,7 +59,8 @@ public class Client {
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
 		  //create HTML file & PrintStream to write on file
-		    File file = new File("C:/Users/phili_000/Desktop/HTML.html");
+		    File file = new File("C:/Users/phili_000/Desktop/CN/HTML.html");
+		    file.getParentFile().mkdirs();
 		    PrintStream ps = new PrintStream(file);
 		    
 		    // send an HTTP request to the web server
@@ -65,6 +68,7 @@ public class Client {
 		    out.println("host: "+uri);
 		    out.println("Connection: Close");
 		    out.println();
+		    
 
 		    // read the response
 		    boolean loop = true;
@@ -79,7 +83,8 @@ public class Client {
 		        loop = false;
 		      }
 		    }
-		    System.out.println(sb.toString());
+		    //TODO uncomment
+		    //System.out.println(sb.toString());
 		    
 		    String s = "<";
 		    while(sb.toString().charAt(0)!=s.charAt(0)){
@@ -89,22 +94,14 @@ public class Client {
 		    //write on HTML file
 		    String HTML = sb.toString();
 		    ps.print(HTML);
-		    
+		    socket.close();
 		    
 		    //parse using jsoup
+		    parse(HTML);
 		    
-		    Document doc = Jsoup.parse(HTML);
-		    Elements img = doc.getElementsByTag("img");
-		  
 		    
-		    for (Element element : img){
-		    	
-		    	String source = element.absUrl("src");
-		    	getIMG(source);
-		    }
-		    	
 		    
-		    socket.close();
+		    
 		}
 		
 		else if (command.equals("HEAD")){
@@ -146,24 +143,68 @@ public class Client {
 		}
 	}
 	
-	private static void getIMG(String str) throws IOException{
-		int index = str.lastIndexOf("/");
-		if (index == str.length()){
-			str = str.substring(1, index);
-		}
+	private static void parse(String HTML) throws IOException {
 		
-		String name = str.substring(index,str.length());
-		URL url = new URL(str);
-		InputStream in = url.openStream();
-		OutputStream out = new BufferedOutputStream(new FileOutputStream("<FOLDER PATH>"+ name));
-		
-		for (int i; (i=in.read()) != -1;){
-			out.write(i);
-		}
-		out.close();
-		in.close();
-	
+			Document doc = Jsoup.parse(HTML);
+			Elements img = doc.select("img");
+	  
+			String str = "http:/www.";
+			
+			for (Element element : img){
+				
+				String source = element.attr("src");
+				
+				String s ="http";
+				if (!source.contains(s)){
+					System.out.println("Image Found");
+					System.out.println("src attribute is : "+source);
+					getIMG(source);
+				}
+			}	    
 	}
-
+	
+	private static void getIMG(String source) throws IOException{
+		
+		InetAddress addr = InetAddress.getByName(uri);
+	    Socket socket = new Socket(addr, port);
+	    
+		File file = new File("C:/Users/phili_000/Desktop/CN/"+source);
+	    file.getParentFile().mkdirs();
+		
+	    DataOutputStream bw = new DataOutputStream(socket.getOutputStream());
+	    bw.writeBytes("GET /"+ source +" HTTP/1.1\r\n");
+	    bw.writeBytes("Host: "+uri+":80\r\n\r\n");
+	    bw.flush();
+	    
+	    DataInputStream in = new DataInputStream(socket.getInputStream());
+	    
+	    OutputStream dos = new FileOutputStream(file);
+	    byte[] buffer = new byte[2048];
+	    boolean eohFound = false;
+	    while ((in.read(buffer)) != -1){
+	    	
+	    	//delete http content length header.
+	    	
+	    	
+//	        if(!eohFound){
+//	            String string = new String(buffer, 0, count);
+//	            int indexOfEOH = string.indexOf("\r\n\r\n");
+//	            if(indexOfEOH != -1) {
+//	                count = count-indexOfEOH-4;
+//	                buffer = string.substring(indexOfEOH+4).getBytes();
+//	                eohFound = true;
+//	            } else {
+//	                count = 0;
+//	            }
+//	        }
+	    	
+	      dos.write(buffer);
+	      dos.flush();
+	    }
+	    
+	    in.close();
+	    dos.close();
+	    socket.close();
+	}
 	
 }
