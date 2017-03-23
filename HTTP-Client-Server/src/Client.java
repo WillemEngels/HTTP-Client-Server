@@ -83,10 +83,8 @@ public class Client {
 		        loop = false;
 		      }
 		    }
-		    
-		    //TODO uncomment
-		    String k = sb.toString();
-		    System.out.println(k);
+		   
+		    System.out.println(sb.toString());
 		    
 		    
 		    String s = "<";
