@@ -127,6 +127,8 @@ public class Client {
 		    socket.close();
 		}
 		
+		
+		
 		else if (command == "PUT"){
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
