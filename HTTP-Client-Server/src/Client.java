@@ -49,8 +49,7 @@ public class Client {
 		if (command.equals("GET")){
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
-		    boolean autoflush = true;
-		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+		    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
 		    //create HTML file & PrintStream to write on file
@@ -102,8 +101,7 @@ public class Client {
 		else if (command.equals("HEAD")){
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
-		    boolean autoflush = true;
-		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+		    PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
 		    // send an HTTP request to the web server
@@ -134,8 +132,7 @@ public class Client {
 		else if (command == "PUT"){
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
-		    boolean autoflush = true;
-		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+		    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
 			
@@ -181,8 +178,7 @@ public class Client {
 			
 			InetAddress addr = InetAddress.getByName(uri);
 		    Socket socket = new Socket(addr, port);
-		    boolean autoflush = true;
-		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+		    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
 			
@@ -248,39 +244,64 @@ public class Client {
 	    //create new file to store the image
 		File file = new File("C:/Users/phili_000/Desktop/CN/"+source);
 	    file.getParentFile().mkdirs();
-		
-	    DataOutputStream bw = new DataOutputStream(socket.getOutputStream());
-	    bw.writeBytes("GET /"+ source +" HTTP/1.1\r\n");
-	    bw.writeBytes("Host: "+uri+":80\r\n\r\n");
-	    bw.flush();
 	    
+	    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+	    dos.writeBytes("GET /"+ source +" HTTP/1.1\r\n");
+	    dos.writeBytes("Host: "+uri+":80\r\n\r\n");
+	    dos.flush();
+
 	    DataInputStream in = new DataInputStream(socket.getInputStream());
-	    
 	    OutputStream os = new FileOutputStream(file);
-	    //delete content length header
 	    
-	    int count, offset;
-	    byte[] buffer = new byte[2048];
-	    boolean eohFound = false;
-	    while ((count = in.read(buffer)) != -1){
-	        offset = 0;
-	        if(!eohFound){
-	            String string = new String(buffer, 0, count);
-	            int indexOfEOH = string.indexOf("\r\n\r\n");
-	            if(indexOfEOH != -1){
-	                count = count-indexOfEOH-4;
-	                offset = indexOfEOH+4;
-	                eohFound = true;
-	            }
-	            else{
-	                count = 0;
-	            }
-	        }
-	        os.write(buffer, offset, count);
+	    //delete content length header
+	    int off;
+	    int len;
+	    
+	    byte[] bite = new byte[2048];
+	    boolean end_of_header = false;
+	    while ((len = in.read(bite)) != -1){
+	    	off = 0;
+	    	if (!end_of_header){
+	    		String str = new String(bite,0,len);
+	    		int end_of_header_index = str.indexOf("\r\n\r\n");
+	    		if(end_of_header_index != -1){
+	    			len = len-end_of_header_index-4;
+	    			off = end_of_header_index + 4;
+	    			end_of_header = true;
+	    		}
+	    		else{
+	    			len = 0;
+	    		}
+	    	}
+	    	os.write(bite, off, len);
 	        os.flush();
 	    }
 	    in.close();
 	    os.close();
-	    socket.close(); 
+	    socket.close();
+	    
+//	    int count, offset;
+//	    byte[] buffer = new byte[2048];
+//	    boolean eohFound = false;
+//	    while ((count = in.read(buffer)) != -1){
+//	        offset = 0;
+//	        if(!eohFound){
+//	            String string = new String(buffer, 0, count);
+//	            int indexOfEOH = string.indexOf("\r\n\r\n");
+//	            if(indexOfEOH != -1){
+//	                count = count-indexOfEOH-4;
+//	                offset = indexOfEOH+4;
+//	                eohFound = true;
+//	            }
+//	            else{
+//	                count = 0;
+//	            }
+//	        }
+//	        os.write(buffer, offset, count);
+//	        os.flush();
+//	    }
+//	    in.close();
+//	    os.close();
+//	    socket.close(); 
 	}
 }
