@@ -32,17 +32,12 @@ public class Client {
 	private static int port;
 	private static String command;
 
-	
-	public static void main(String[] args) throws Exception{
 		
+	public static void main(String[] args) throws Exception{
+
 		command = args[0];
 		uri = args[1];
 		port =  Integer.parseInt(args[2]);
-		
-//		System.out.println(command);
-//		System.out.println(uri);
-//		System.out.println(port);
-		//getinput
 		
 		makeRequest(uri);
 		
@@ -58,7 +53,7 @@ public class Client {
 		    PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
 		    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		    
-		  //create HTML file & PrintStream to write on file
+		    //create HTML file & PrintStream to write on file
 		    File file = new File("C:/Users/phili_000/Desktop/CN/HTML.html");
 		    file.getParentFile().mkdirs();
 		    PrintStream ps = new PrintStream(file);
@@ -73,21 +68,20 @@ public class Client {
 		    // read the response
 		    boolean loop = true;
 		    StringBuilder sb = new StringBuilder();
-		    while (loop) {
-		      if (in.ready()) {
-		        int i = 0;
-		        while (i != -1) {
-		          i = in.read();
-		          sb.append((char) i);
-		        }
-		        loop = false;
-		      }
+		    while (loop){
+		    	if (in.ready()){
+		    		int i = 0;
+		    		while (i != -1){
+		    			i = in.read();
+		    			sb.append((char) i);
+		    		}
+		    		loop = false;
+		    	}
 		    }
 		   
-		    System.out.println(">>>>>>>>>");
+
 		    System.out.println(sb.toString());
-		    System.out.println("<<<<<<<<<");
-		    
+		    socket.close();
 		    String s = "<";
 		    while(sb.toString().charAt(0)!=s.charAt(0)){
 		    	sb.deleteCharAt(0);
@@ -99,9 +93,7 @@ public class Client {
 		    
 		    
 		    //parse using jsoup
-		    parse(HTML);
-		    socket.close();
-		    
+		    parse(HTML);	
 		}
 		
 		else if (command.equals("HEAD")){
@@ -120,15 +112,15 @@ public class Client {
 		    // read the response
 		    boolean loop = true;
 		    StringBuilder sb = new StringBuilder();
-		    while (loop) {
-		      if (in.ready()) {
-		        int i = 0;
-		        while (i != -1) {
-		          i = in.read();
-		          sb.append((char) i);
-		        }
-		        loop = false;
-		      }
+		    while (loop){
+		    	if (in.ready()){
+		    		int i = 0;
+		    		while (i != -1){
+		    			i = in.read();
+		    			sb.append((char) i);
+		    		}
+		    		loop = false;
+		    	}
 		    }
 		    System.out.println(sb.toString());
 		    socket.close();
@@ -182,27 +174,25 @@ public class Client {
 	    int count, offset;
 	    byte[] buffer = new byte[2048];
 	    boolean eohFound = false;
-	    while ((count = in.read(buffer)) != -1)
-	    {
+	    while ((count = in.read(buffer)) != -1){
 	        offset = 0;
 	        if(!eohFound){
 	            String string = new String(buffer, 0, count);
 	            int indexOfEOH = string.indexOf("\r\n\r\n");
-	            if(indexOfEOH != -1) {
+	            if(indexOfEOH != -1){
 	                count = count-indexOfEOH-4;
 	                offset = indexOfEOH+4;
 	                eohFound = true;
-	            } else {
+	            }
+	            else{
 	                count = 0;
 	            }
 	        }
-	      os.write(buffer, offset, count);
-	      
-	      os.flush();
+	        os.write(buffer, offset, count);
+	        os.flush();
 	    }
 	    in.close();
-	    os.close();   
-	    socket.close();
+	    os.close();
+	    socket.close(); 
 	}
-	
 }
