@@ -254,54 +254,32 @@ public class Client {
 	    OutputStream os = new FileOutputStream(file);
 	    
 	    //delete content length header
-	    int off;
-	    int len;
+	    int off;//offset
+	    int len;//length
 	    
 	    byte[] bite = new byte[2048];
 	    boolean end_of_header = false;
-	    while ((len = in.read(bite)) != -1){
+	    while ((len = in.read(bite)) != -1){//len== number of bytes read+bytes are stored in bite
 	    	off = 0;
-	    	if (!end_of_header){
-	    		String str = new String(bite,0,len);
-	    		int end_of_header_index = str.indexOf("\r\n\r\n");
-	    		if(end_of_header_index != -1){
-	    			len = len-end_of_header_index-4;
+	    	if (end_of_header==false){//
+	    		String str = new String(bite,0,len);//make new string with amount of bites that equals len
+	    		int end_of_header_index = str.indexOf("\r\n\r\n");// this is the end of the http header
+	    		if(end_of_header_index != -1){//if end_of_header_index == -1 this means the end of the header is not found in str
+	    			len = len-end_of_header_index-4;//4 equals length of a bite
 	    			off = end_of_header_index + 4;
 	    			end_of_header = true;
 	    		}
-	    		else{
-	    			len = 0;
-	    		}
+	    		
 	    	}
-	    	os.write(bite, off, len);
-	        os.flush();
+	    	//System.out.println(off+" "+len);
+	    	os.write(bite, off, len);//write bite[off] through bite[off+len-1]
+	    	os.flush();
 	    }
+	    
+	    
 	    in.close();
 	    os.close();
 	    socket.close();
 	    
-//	    int count, offset;
-//	    byte[] buffer = new byte[2048];
-//	    boolean eohFound = false;
-//	    while ((count = in.read(buffer)) != -1){
-//	        offset = 0;
-//	        if(!eohFound){
-//	            String string = new String(buffer, 0, count);
-//	            int indexOfEOH = string.indexOf("\r\n\r\n");
-//	            if(indexOfEOH != -1){
-//	                count = count-indexOfEOH-4;
-//	                offset = indexOfEOH+4;
-//	                eohFound = true;
-//	            }
-//	            else{
-//	                count = 0;
-//	            }
-//	        }
-//	        os.write(buffer, offset, count);
-//	        os.flush();
-//	    }
-//	    in.close();
-//	    os.close();
-//	    socket.close(); 
 	}
 }
